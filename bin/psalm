@@ -24,7 +24,7 @@ $options = getopt(
     [
         'help', 'debug', 'config:', 'monochrome', 'show-info:', 'diff',
         'file:', 'self-check', 'update-docblocks', 'output-format:',
-        'find-dead-code', 'init',
+        'find-dead-code', 'init', 'server',
     ]
 );
 
@@ -87,6 +87,9 @@ Options:
 
     --find-dead-code
         Look for dead code
+
+    --server
+        Start Psalm in server mode
 
 
 HELP;
@@ -258,7 +261,9 @@ if ($path_to_config) {
 
 \Psalm\IssueBuffer::setStartTime(microtime(true));
 
-if (array_key_exists('self-check', $options)) {
+if (array_key_exists('server', $options)) {
+    $project_checker->server();
+} elseif (array_key_exists('self-check', $options)) {
     $project_checker->checkDir(dirname(__DIR__) . '/src');
 } elseif ($paths_to_check === null) {
     $project_checker->check($is_diff);
