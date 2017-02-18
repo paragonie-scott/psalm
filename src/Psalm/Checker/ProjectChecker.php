@@ -290,8 +290,6 @@ class ProjectChecker
                     new \Psalm\LanguageServer\Protocol\Position(191, 19)
                 );
 
-                var_dump($node);
-
                 $response = json_encode(IssueBuffer::clear()) . PHP_EOL;
 
                 socket_write($msgsock, $response, strlen($response));

@@ -28,7 +28,7 @@ class FileProvider
 
         $from_cache = false;
 
-        $version = 'parsercache4' . ($project_checker->server_mode ? 'server' : '');
+        $version = 'parsercache4.1' . ($project_checker->server_mode ? 'server' : '');
 
         $file_contents = $project_checker->getFileContents($file_path);
         $file_content_hash = md5($version . $file_contents);
@@ -62,11 +62,13 @@ class FileProvider
      */
     private static function parseStatementsInFile(ProjectChecker $project_checker, $file_contents)
     {
-        $lexer = new PhpParser\Lexer([
-            'usedAttributes' => [
-                'comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'
-            ]
-        ]);
+        $attributes = ['comments', 'startLine', 'startFilePos', 'endFilePos'];
+
+        if ($project_checker->server_mode) {
+            $attributes[] = 'endLine';
+        }
+
+        $lexer = new PhpParser\Lexer(['usedAttributes' => $attributes]);
 
         $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 
