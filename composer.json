@@ -17,7 +17,8 @@
     "bin": ["bin/psalm"],
     "autoload": {
         "psr-4": {
-            "Psalm\\": "src/Psalm"
+            "Psalm\\": "src/Psalm",
+            "LanguageServer\\": "src/LanguageServer"
         }
     },
     "autoload-dev": {

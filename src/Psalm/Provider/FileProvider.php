@@ -81,4 +81,19 @@ class FileProvider
 
         return $stmts;
     }
+
+    /**
+     * Returns the node at a specified position
+     * @param array<PhpParser\Node> $stmts
+     * @param \LanguageServer\Protocol\Position $position
+     * @return PhpParser\Node|null
+     */
+    public static function getNodeAtPosition(array $stmts, \LanguageServer\Protocol\Position $position)
+    {
+        $traverser = new PhpParser\NodeTraverser;
+        $finder = new \LanguageServer\NodeVisitor\NodeAtPositionFinder($position);
+        $traverser->addVisitor($finder);
+        $traverser->traverse($stmts);
+        return $finder->node;
+    }
 }

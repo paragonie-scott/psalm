@@ -7,7 +7,7 @@
     strictBinaryOperands="false"
 >
     <projectFiles>
-        <directory name="src" />
+        <directory name="src/Psalm" />
         <directory name="tests" />
         <directory name="examples" />
         <ignoreFiles>

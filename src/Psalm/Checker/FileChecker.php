@@ -52,11 +52,6 @@ class FileChecker extends SourceChecker implements StatementsSource
     protected $namespace_aliased_classes_flipped = [];
 
     /**
-     * @var array<int, \PhpParser\Node\Stmt>
-     */
-    protected $preloaded_statements = [];
-
-    /**
      * @var bool
      */
     public static $show_notices = true;
@@ -109,6 +104,11 @@ class FileChecker extends SourceChecker implements StatementsSource
     protected $will_analyze;
 
     /**
+     * @var array<int, PhpParser\Node\Stmt>|null
+     */
+    public $stmts;
+
+    /**
      * @param string                                $file_path
      * @param ProjectChecker                        $project_checker
      * @param array<int, PhpParser\Node\Stmt>|null  $preloaded_statements
@@ -130,7 +130,7 @@ class FileChecker extends SourceChecker implements StatementsSource
         }
 
         if ($preloaded_statements) {
-            $this->preloaded_statements = $preloaded_statements;
+            $this->stmts = $preloaded_statements;
         }
 
         $this->context = new Context();
@@ -247,6 +247,10 @@ class FileChecker extends SourceChecker implements StatementsSource
         $this->interface_checkers_to_visit = [];
 
         $this->function_checkers = $function_checkers;
+
+        if ($this->will_analyze) {
+            $this->stmts = $stmts;
+        }
     }
 
     /**
@@ -431,10 +435,10 @@ class FileChecker extends SourceChecker implements StatementsSource
     /**
      * @return array<int, \PhpParser\Node\Stmt>
      */
-    protected function getStatements()
+    public function getStatements()
     {
-        return $this->preloaded_statements
-            ? $this->preloaded_statements
+        return $this->stmts
+            ? $this->stmts
             : FileProvider::getStatementsForFile(
                 $this->project_checker,
                 $this->file_path,

@@ -189,6 +189,9 @@ class IssueBuffer
             "\e[0m" . substr($snippet, $selection_length + $selection_start) . PHP_EOL;
     }
 
+    /**
+     * @return array
+     */
     public static function clear()
     {
         $current_data = self::$issue_data;
