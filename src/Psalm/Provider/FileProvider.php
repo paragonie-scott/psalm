@@ -3,6 +3,7 @@ namespace Psalm\Provider;
 
 use PhpParser;
 use Psalm\Checker\ProjectChecker;
+use Psalm\LanguageServer\NodeVisitor\{ColumnCalculator, ReferencesAdder};
 
 class FileProvider
 {
@@ -27,7 +28,7 @@ class FileProvider
 
         $from_cache = false;
 
-        $version = 'parsercache4';
+        $version = 'parsercache4' . ($project_checker->server_mode ? 'server' : '');
 
         $file_contents = $project_checker->getFileContents($file_path);
         $file_content_hash = md5($version . $file_contents);
@@ -40,7 +41,7 @@ class FileProvider
                 echo 'Parsing ' . $file_path . PHP_EOL;
             }
 
-            $stmts = self::parseStatementsInFile($file_contents);
+            $stmts = self::parseStatementsInFile($project_checker, $file_contents);
         } else {
             $from_cache = true;
         }
@@ -55,14 +56,15 @@ class FileProvider
     }
 
     /**
-     * @param  string   $file_contents
+     * @param  ProjectChecker   $project_checker
+     * @param  string           $file_contents
      * @return array<int, \PhpParser\Node\Stmt>
      */
-    private static function parseStatementsInFile($file_contents)
+    private static function parseStatementsInFile(ProjectChecker $project_checker, $file_contents)
     {
         $lexer = new PhpParser\Lexer([
             'usedAttributes' => [
-                'comments', 'startLine', 'startFilePos', 'endFilePos'
+                'comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'
             ]
         ]);
 
@@ -77,6 +79,18 @@ class FileProvider
             foreach ($error_handler->getErrors() as $error) {
                 throw $error;
             }
+        }
+
+        if ($project_checker->server_mode) {
+            $traverser = new PhpParser\NodeTraverser;
+
+            // Add parentNode, previousSibling, nextSibling attributes
+            $traverser->addVisitor(new ReferencesAdder());
+
+            // Add column attributes to nodes
+            $traverser->addVisitor(new ColumnCalculator($file_contents));
+
+            $traverser->traverse($stmts);
         }
 
         return $stmts;
