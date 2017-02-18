@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace LanguageServer\NodeVisitor;
+namespace Psalm\LanguageServer\NodeVisitor;
 
 use PhpParser\{NodeVisitorAbstract, Node, NodeTraverser};
-use LanguageServer\Protocol\{Position, Range};
+use Psalm\LanguageServer\Protocol\{Position, Range};
 
 /**
  * Finds the Node at a specified position

@@ -1,6 +1,5 @@
 <?php
-
-namespace LanguageServer\Protocol;
+namespace Psalm\LanguageServer\Protocol;
 
 use PhpParser\{Error, Node};
 

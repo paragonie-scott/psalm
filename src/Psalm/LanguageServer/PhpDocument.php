@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace LanguageServer;
+namespace Psalm\LanguageServer;
 
-use LanguageServer\Protocol\{Diagnostic, DiagnosticSeverity, Range, Position, TextEdit};
-use LanguageServer\NodeVisitor\{
+use Psalm\LanguageServer\Protocol\{Diagnostic, DiagnosticSeverity, Range, Position, TextEdit};
+use Psalm\LanguageServer\NodeVisitor\{
     NodeAtPositionFinder,
     ReferencesAdder,
     DocBlockParser,
@@ -12,7 +12,7 @@ use LanguageServer\NodeVisitor\{
     ColumnCalculator,
     ReferencesCollector
 };
-use LanguageServer\Index\Index;
+use Psalm\LanguageServer\Index\Index;
 use PhpParser\{Error, ErrorHandler, Node, NodeTraverser};
 use PhpParser\NodeVisitor\NameResolver;
 use phpDocumentor\Reflection\DocBlockFactory;
@@ -223,7 +223,7 @@ class PhpDocument
     /**
      * Returns array of TextEdit changes to format this document.
      *
-     * @return \LanguageServer\Protocol\TextEdit[]
+     * @return \Psalm\LanguageServer\Protocol\TextEdit[]
      */
     public function getFormattedText()
     {

@@ -1,6 +1,5 @@
 <?php
-
-namespace LanguageServer\Protocol;
+namespace Psalm\LanguageServer\Protocol;
 
 /**
  * Position in a text document expressed as zero-based line and character offset.
